@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "JP-5 | 일본어 학습 앱",
+  title: "일본어 학습 앱",
   description: "일본 현지 문장을 저장하고 단어/한자/문법을 반복 학습하는 앱",
 };
 
