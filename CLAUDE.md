@@ -9,7 +9,7 @@
 - Backend: Spring Boot 3.5 (Java 17) + Gradle
 - Database: PostgreSQL
 - Auth: Supabase Auth
-- Hosting: Vercel (프론트) + Railway (백엔드)
+- Hosting: Vercel (프론트)
 
 ## 폴더 구조
 - frontend/ → Next.js 프로젝트
