@@ -6,25 +6,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 @RestController
-@Tag(name = "테스트", description = "배포 확인용 임시 API (추후 삭제 예정)")
+@Tag(name = "시스템", description = "서버 상태 확인 API")
 public class HealthController {
 
     @GetMapping("/health")
-    @Operation(summary = "헬스 체크", description = "서버 상태 확인")
+    @Operation(summary = "헬스 체크", description = "서버 정상 동작 여부 확인")
     public Map<String, String> health() {
         return Map.of("status", "OK");
     }
 
-    @GetMapping("/api/ping")
-    @Operation(summary = "배포 확인", description = "백엔드 배포 확인용 테스트 엔드포인트")
-    public Map<String, Object> ping() {
+    @GetMapping("/api/v1/check")
+    @Operation(summary = "배포 확인", description = "백엔드 배포 상태 및 서버 정보 반환")
+    public Map<String, String> check() {
         return Map.of(
-            "message", "백엔드 배포 확인 완료 ✅",
-            "timestamp", LocalDateTime.now().toString(),
-            "version", "1.0.0"
+            "status", "OK",
+            "server", "Render",
+            "checkedAt", LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
         );
     }
 }
