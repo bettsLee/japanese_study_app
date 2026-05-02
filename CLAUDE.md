@@ -1,38 +1,109 @@
 # CLAUDE.md
 
-## 프로젝트 개요
-일본 현지 생활 중 접한 문장을 저장하고,
-단어/한자/문법을 퀴즈로 반복 학습하는 앱
+## Project Overview
+An app to save Japanese sentences encountered in daily life in Japan,
+and practice vocabulary, kanji, and grammar through quizzes.
 
-## 기술 스택
+## Tech Stack
 - Frontend: Next.js 15 (TypeScript) + Tailwind CSS
 - Backend: Spring Boot 3.5 (Java 17) + Gradle
 - Database: PostgreSQL
 - Auth: Supabase Auth
-- Hosting: Vercel (프론트) + Render (백엔드)
+- Hosting: Vercel (frontend) + Render (backend)
 
-## 폴더 구조
-- frontend/ → Next.js 프로젝트
-- backend/ → Spring Boot 프로젝트
+## Folder Structure
+- frontend/ → Next.js project
+- backend/ → Spring Boot project
 
-## 브랜치 전략
-- main: 배포용 (직접 커밋 금지)
-- develop: 개발 통합 브랜치
-- feature/JP-이슈번호-작업명: 기능별 브랜치
+## Branch Strategy
+- main: production (no direct commits)
+- develop: integration branch
+- feature/JP-{issue}-{name}: feature branches
 
-## 코드 규칙
-- 커밋 메시지: [JP-번호] 작업내용
-- PR 제목: [JP-번호] 작업내용
-- 주석은 한국어로 작성
-- 환경변수는 .env.example에 키만 추가 (값은 절대 커밋 금지)
+## Code Rules
+- Commit message: [JP-number] description
+- PR title: [JP-number] description
+- Comments: written in Korean
+- Env vars: add keys only to .env.example (never commit values)
 
-## 완료 조건
-모든 작업 완료 후 아래 순서로 마무리:
-1. feature/JP-이슈번호 브랜치에 커밋
-2. gh pr create --base develop \
-   --title "[JP-이슈번호] 작업제목" \
-   --body "작업 내용 요약" 으로 PR 생성
+## Completion Checklist
+After all work is done:
+1. Commit to feature/JP-{issue} branch
+2. Create PR with:
+   ```
+   gh pr create --base develop \
+     --title "[JP-issue] title" \
+     --body "summary of changes"
+   ```
 
-## 참고
-- Jira 보드: https://lsk941017.atlassian.net/jira/software/projects/JP/boards/1
+## References
+- Jira board: https://lsk941017.atlassian.net/jira/software/projects/JP/boards/1
 - GitHub: https://github.com/bettsLee/japanese_study_app
+
+---
+
+## AI Coding Guidelines
+
+Behavioral guidelines to reduce common LLM coding mistakes.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+### 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+### 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+### 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+### 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+---
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
