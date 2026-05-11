@@ -8,14 +8,20 @@ public record EntryResponse(
     Long id,
     EntryType type,
     String content,
-    LocalDate savedAt
+    LocalDate savedAt,
+    int quizCount,
+    int correctCount,
+    boolean inQuizPool
 ) {
     public static EntryResponse from(Entry entry) {
         return new EntryResponse(
             entry.getId(),
             entry.getType(),
             entry.getContent(),
-            entry.getSavedAt()
+            entry.getSavedAt(),
+            entry.getQuizCount(),
+            entry.getCorrectCount(),
+            entry.isInQuizPool()
         );
     }
 }

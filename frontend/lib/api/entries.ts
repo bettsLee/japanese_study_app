@@ -9,6 +9,9 @@ export interface EntryResponse {
   type: EntryType;
   content: string;
   savedAt: string;
+  quizCount: number;
+  correctCount: number;
+  inQuizPool: boolean;
 }
 
 async function getAuthHeader(): Promise<string> {
@@ -47,5 +50,15 @@ export async function getEntries(): Promise<EntryResponse[]> {
     headers: { 'Authorization': auth },
   });
   if (!res.ok) throw new Error('조회에 실패했습니다.');
+  return res.json();
+}
+
+export async function forceAddToQuiz(id: number): Promise<EntryResponse> {
+  const auth = await getAuthHeader();
+  const res = await fetch(`${API_URL}/api/v1/entries/${id}/quiz-add`, {
+    method: 'PUT',
+    headers: { 'Authorization': auth },
+  });
+  if (!res.ok) throw new Error('퀴즈 추가에 실패했습니다.');
   return res.json();
 }
