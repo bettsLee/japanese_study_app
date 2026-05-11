@@ -1,13 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
-export default function LoginPage() {
+function LoginContent() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const urlError = searchParams.get('error');
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(urlError === 'auth_error' ? '구글 로그인에 실패했습니다. 다시 시도해주세요.' : '');
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,7 +21,11 @@ export default function LoginPage() {
 
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) setError(error.message);
+    if (error) {
+      setError(error.message);
+    } else {
+      router.push('/save');
+    }
     setLoading(false);
   };
 
@@ -185,5 +194,13 @@ export default function LoginPage() {
         </p>
       </div>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   );
 }
