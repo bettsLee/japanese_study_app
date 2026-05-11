@@ -35,4 +35,11 @@ public class EntryService {
                 .map(EntryResponse::from)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
     }
+
+    public EntryResponse forceAddToQuiz(Long id, String userId) {
+        Entry entry = entryRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
+        entry.forceAddToQuiz();
+        return EntryResponse.from(entryRepository.save(entry));
+    }
 }
