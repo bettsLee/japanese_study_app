@@ -45,6 +45,14 @@ public class EntryController {
         return entryService.findByIdAndUser(id, extractUserId(auth));
     }
 
+    @PutMapping("/{id}/quiz-add")
+    @Operation(summary = "퀴즈 강제 추가", description = "정답률과 무관하게 퀴즈 대상으로 강제 추가")
+    public EntryResponse forceAddToQuiz(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String auth) {
+        return entryService.forceAddToQuiz(id, extractUserId(auth));
+    }
+
     // Supabase JWT의 sub 클레임을 userId로 추출
     private String extractUserId(String authHeader) {
         String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
