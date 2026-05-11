@@ -18,10 +18,12 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/health",
                     "/api/v1/check",
+                    "/api/v1/entries",
                     "/swagger-ui/**",
                     "/swagger-ui.html",
                     "/v3/api-docs/**"
                 ).permitAll()
+                // TODO: JWT 인증 구현 후 entries 엔드포인트 인증 필요
                 .anyRequest().authenticated()
             );
         return http.build();
