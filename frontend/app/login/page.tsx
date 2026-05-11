@@ -8,11 +8,16 @@ function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
+  const urlDetail = searchParams.get('detail');
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(urlError === 'auth_error' ? '구글 로그인에 실패했습니다. 다시 시도해주세요.' : '');
+  const [error, setError] = useState(
+    urlError === 'auth_error'
+      ? `구글 로그인에 실패했습니다. 다시 시도해주세요.${urlDetail ? ` (${urlDetail})` : ''}`
+      : ''
+  );
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
