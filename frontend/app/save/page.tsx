@@ -19,7 +19,7 @@ export default function SavePage() {
       const entry = await saveEntry(type, content.trim());
       // 저장 완료 후 태깅 화면으로 이동 (JP-8)
       router.push(`/tag?entryId=${entry.id}&type=${entry.type}`);
-    } catch (e) {
+    } catch {
       setError('저장에 실패했습니다. 다시 시도해주세요.');
       setLoading(false);
     }
