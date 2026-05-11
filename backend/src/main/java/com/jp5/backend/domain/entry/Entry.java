@@ -11,6 +11,9 @@ public class Entry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "user_id")
+    private String userId;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private EntryType type;
@@ -29,12 +32,14 @@ public class Entry {
 
     protected Entry() {}
 
-    public Entry(EntryType type, String content) {
+    public Entry(EntryType type, String content, String userId) {
         this.type = type;
         this.content = content;
+        this.userId = userId;
     }
 
     public Long getId() { return id; }
+    public String getUserId() { return userId; }
     public EntryType getType() { return type; }
     public String getContent() { return content; }
     public LocalDate getSavedAt() { return savedAt; }

@@ -1,3 +1,5 @@
+import { createClient } from '@/lib/supabase/client';
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export type EntryType = 'SENTENCE' | 'WORD';
@@ -9,13 +11,41 @@ export interface EntryResponse {
   savedAt: string;
 }
 
+async function getAuthHeader(): Promise<string> {
+  const supabase = createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  if (!session) throw new Error('로그인이 필요합니다.');
+  return `Bearer ${session.access_token}`;
+}
+
 export async function saveEntry(type: EntryType, content: string): Promise<EntryResponse> {
+  const auth = await getAuthHeader();
   const res = await fetch(`${API_URL}/api/v1/entries`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': auth,
+    },
     body: JSON.stringify({ type, content }),
   });
-
   if (!res.ok) throw new Error('저장에 실패했습니다.');
+  return res.json();
+}
+
+export async function getEntry(id: number): Promise<EntryResponse> {
+  const auth = await getAuthHeader();
+  const res = await fetch(`${API_URL}/api/v1/entries/${id}`, {
+    headers: { 'Authorization': auth },
+  });
+  if (!res.ok) throw new Error('조회에 실패했습니다.');
+  return res.json();
+}
+
+export async function getEntries(): Promise<EntryResponse[]> {
+  const auth = await getAuthHeader();
+  const res = await fetch(`${API_URL}/api/v1/entries`, {
+    headers: { 'Authorization': auth },
+  });
+  if (!res.ok) throw new Error('조회에 실패했습니다.');
   return res.json();
 }
