@@ -30,9 +30,9 @@ export default function SavePage() {
       {/* 상단 헤더 */}
       <header className="flex items-center gap-3 border-b border-gray-200 bg-white px-4 py-4">
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/list')}
           className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100"
-          aria-label="뒤로가기"
+          aria-label="목록으로"
         >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

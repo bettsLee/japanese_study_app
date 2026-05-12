@@ -1,38 +1,19 @@
 'use client';
 
 import { Suspense, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 function LoginContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
   const urlDetail = searchParams.get('detail');
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(
     urlError === 'auth_error'
       ? `구글 로그인에 실패했습니다. 다시 시도해주세요.${urlDetail ? ` (${urlDetail})` : ''}`
       : ''
   );
-
-  const handleEmailLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
-
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
-      setError(error.message);
-    } else {
-      router.push('/save');
-    }
-    setLoading(false);
-  };
 
   const handleGoogleLogin = async () => {
     setError('');
@@ -67,101 +48,8 @@ function LoginContent() {
         {/* 제목 */}
         <h1 className="mb-8 text-center text-3xl font-bold text-gray-900">Sign in</h1>
 
-        {/* 이메일/비밀번호 폼 */}
-        <form onSubmit={handleEmailLogin} className="space-y-4">
-          {/* 이메일 필드 */}
-          <div>
-            <label className="mb-1.5 block text-sm font-medium text-gray-700">
-              Email Address
-            </label>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="aya@example.com"
-                required
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-              />
-            </div>
-          </div>
-
-          {/* 비밀번호 필드 */}
-          <div>
-            <div className="mb-1.5 flex items-center justify-between">
-              <label className="text-sm font-medium text-gray-700">Password</label>
-              <button
-                type="button"
-                className="text-sm font-medium text-sky-500 hover:text-sky-600"
-              >
-                Forgot password?
-              </button>
-            </div>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-3.5 flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-                className="w-full rounded-xl border border-gray-200 bg-white py-3 pl-10 pr-4 text-sm text-gray-900 placeholder-gray-400 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
-              />
-            </div>
-          </div>
-
-          {/* 에러 메시지 */}
-          {error && <p className="text-sm text-red-500">{error}</p>}
-
-          {/* 로그인 버튼 */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-2 w-full rounded-xl bg-sky-400 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98] disabled:opacity-60"
-          >
-            {loading ? '로그인 중...' : 'Sign in'}
-          </button>
-        </form>
-
-        {/* OR CONTINUE WITH 구분선 */}
-        <div className="my-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-gray-200" />
-          <span className="text-xs font-medium uppercase tracking-widest text-gray-400">
-            or continue with
-          </span>
-          <div className="h-px flex-1 bg-gray-200" />
-        </div>
+        {/* 에러 메시지 */}
+        {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
         {/* 구글 로그인 버튼 */}
         <button
@@ -187,16 +75,8 @@ function LoginContent() {
               fill="#EA4335"
             />
           </svg>
-          Google
+          Continue with Google
         </button>
-
-        {/* 회원가입 링크 */}
-        <p className="mt-6 text-center text-sm text-gray-500">
-          Don&apos;t have an account?{' '}
-          <a href="/signup" className="font-semibold text-sky-500 hover:text-sky-600">
-            Create an account
-          </a>
-        </p>
       </div>
     </main>
   );
