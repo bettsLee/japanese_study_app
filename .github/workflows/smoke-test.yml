@@ -1,0 +1,37 @@
+name: Smoke Test
+
+on:
+  deployment_status:
+
+jobs:
+  smoke-test:
+    name: Smoke Test (Production)
+    runs-on: ubuntu-latest
+    if: |
+      github.event.deployment_status.state == 'success' &&
+      github.event.deployment.environment == 'Production'
+    steps:
+      - name: Frontend — /login
+        run: |
+          URL="${{ github.event.deployment_status.target_url }}/login"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$URL")
+          echo "GET $URL → $STATUS"
+          [ "$STATUS" = "200" ] || (echo "❌ 실패" && exit 1)
+          echo "✅ 통과"
+
+      - name: Frontend — /save (미인증 시 /login 리다이렉트)
+        run: |
+          URL="${{ github.event.deployment_status.target_url }}/save"
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 -L "$URL")
+          echo "GET $URL (리다이렉트 포함) → $STATUS"
+          [ "$STATUS" = "200" ] || (echo "❌ 실패" && exit 1)
+          echo "✅ 통과"
+
+      - name: Backend — /health
+        run: |
+          RESPONSE=$(curl -s --max-time 60 "https://japanese-study-app.onrender.com/health")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://japanese-study-app.onrender.com/health")
+          echo "GET /health → $STATUS | body: $RESPONSE"
+          [ "$STATUS" = "200" ] || (echo "❌ HTTP 실패" && exit 1)
+          echo "$RESPONSE" | grep -q '"status":"OK"' || (echo "❌ 응답 body 불일치" && exit 1)
+          echo "✅ 통과"

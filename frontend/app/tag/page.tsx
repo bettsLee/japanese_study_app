@@ -89,7 +89,7 @@ function TagContent() {
       {/* 완료 버튼 */}
       <div className="border-t border-gray-200 bg-white px-4 py-4">
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/list')}
           className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98]"
         >
           완료

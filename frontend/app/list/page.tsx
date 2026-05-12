@@ -48,7 +48,7 @@ export default function ListPage() {
       {/* 헤더 */}
       <header className="flex items-center border-b border-gray-200 bg-white px-4 py-4">
         <button
-          onClick={() => router.push('/')}
+          onClick={() => router.push('/save')}
           className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-gray-100"
           aria-label="홈으로"
         >
