@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Frontend — /login
         run: |
-          URL="${{ github.event.deployment_status.target_url }}/login"
+          URL="https://japanese-study-app-front-dev.vercel.app/login"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$URL")
           echo "GET $URL → $STATUS"
           [ "$STATUS" = "200" ] || (echo "❌ 실패" && exit 1)
@@ -21,7 +21,7 @@ jobs:
 
       - name: Frontend — /save (미인증 시 /login 리다이렉트)
         run: |
-          URL="${{ github.event.deployment_status.target_url }}/save"
+          URL="https://japanese-study-app-front-dev.vercel.app/save"
           STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 -L "$URL")
           echo "GET $URL (리다이렉트 포함) → $STATUS"
           [ "$STATUS" = "200" ] || (echo "❌ 실패" && exit 1)
