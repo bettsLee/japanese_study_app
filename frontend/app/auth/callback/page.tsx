@@ -1,16 +1,18 @@
 'use client';
 
 import { Suspense, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 
 function CallbackHandler() {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const code = searchParams.get('code');
-    const next = searchParams.get('next') ?? '/save';
+    // useSearchParams는 정적 페이지 첫 렌더에서 빈 값을 반환할 수 있으므로
+    // window.location.search로 직접 파싱
+    const params = new URLSearchParams(window.location.search);
+    const code = params.get('code');
+    const next = params.get('next') ?? '/save';
 
     if (!code) {
       router.push('/login?error=auth_error');
@@ -18,13 +20,17 @@ function CallbackHandler() {
     }
 
     const supabase = createClient();
-    supabase.auth.exchangeCodeForSession(code).then(({ error }) => {
-      if (error) {
-        router.push(`/login?error=auth_error&detail=${encodeURIComponent(error.message)}`);
-      } else {
-        router.push(next);
-      }
-    });
+    supabase.auth.exchangeCodeForSession(code)
+      .then(({ error }) => {
+        if (error) {
+          router.push(`/login?error=auth_error&detail=${encodeURIComponent(error.message)}`);
+        } else {
+          router.push(next);
+        }
+      })
+      .catch((err) => {
+        router.push(`/login?error=auth_error&detail=${encodeURIComponent(String(err))}`);
+      });
   }, []);
 
   return (
