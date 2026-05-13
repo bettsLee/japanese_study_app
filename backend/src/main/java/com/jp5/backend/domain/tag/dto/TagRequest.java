@@ -1,6 +1,7 @@
 package com.jp5.backend.domain.tag.dto;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.jp5.backend.domain.entry.EntryType;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
-public record TagRequest(@NotEmpty List<String> tags) {}
+public record TagRequest(@NotNull EntryType type, List<String> tags) {}

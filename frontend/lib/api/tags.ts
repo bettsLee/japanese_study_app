@@ -15,7 +15,7 @@ async function getAuthHeader(): Promise<string> {
   return `Bearer ${session.access_token}`;
 }
 
-export async function saveTags(entryId: number, tags: string[]): Promise<TagResponse[]> {
+export async function saveTags(entryId: number, type: string, tags: string[]): Promise<TagResponse[]> {
   const auth = await getAuthHeader();
   const res = await fetch(`${API_URL}/api/v1/entries/${entryId}/tags`, {
     method: 'POST',
@@ -23,7 +23,7 @@ export async function saveTags(entryId: number, tags: string[]): Promise<TagResp
       'Content-Type': 'application/json',
       'Authorization': auth,
     },
-    body: JSON.stringify({ tags }),
+    body: JSON.stringify({ type, tags }),
   });
   if (!res.ok) throw new Error('태그 저장에 실패했습니다.');
   return res.json();

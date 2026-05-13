@@ -51,15 +51,11 @@ function TagContent() {
   };
 
   const handleDone = async () => {
-    if (tags.length === 0) {
-      router.push('/list');
-      return;
-    }
     setSaving(true);
     try {
-      await saveTags(entryId, tags);
+      await saveTags(entryId, selectedType, tags);
     } catch {
-      // 태그 저장 실패 시에도 목록으로 이동
+      // 저장 실패 시에도 목록으로 이동
     } finally {
       setSaving(false);
       router.push('/list');
