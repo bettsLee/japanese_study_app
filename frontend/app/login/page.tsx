@@ -41,12 +41,13 @@ function LoginContent() {
             </svg>
           </div>
           <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-            Your Language Journey Starts Here
+            이상권의 일본어 정복기 🗾
           </p>
         </div>
 
         {/* 제목 */}
-        <h1 className="mb-8 text-center text-3xl font-bold text-gray-900">Sign in</h1>
+        <h1 className="mb-2 text-center text-3xl font-bold text-gray-900">오늘도 왔군요?</h1>
+        <p className="mb-8 text-center text-sm text-gray-400">(어제 배운 거 기억하세요?)</p>
 
         {/* 에러 메시지 */}
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
@@ -75,7 +76,7 @@ function LoginContent() {
               fill="#EA4335"
             />
           </svg>
-          Continue with Google
+          Google로 계속하기
         </button>
       </div>
     </main>
