@@ -37,6 +37,12 @@ export default function SavePage() {
           </svg>
         </button>
         <h1 className="text-base font-semibold text-gray-900">문장 저장</h1>
+        <button
+          onClick={() => router.push('/list')}
+          className="ml-auto text-sm text-sky-500 font-medium"
+        >
+          목록 보기
+        </button>
       </header>
 
       <div className="flex flex-1 flex-col gap-6 px-4 py-6">
@@ -46,19 +52,19 @@ export default function SavePage() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Japanese Text
+            일본어 문장
           </label>
           <div className="relative">
             <textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Enter Japanese text here..."
+              placeholder="일본어 문장을 입력해주세요..."
               rows={4}
               className="w-full resize-none rounded-xl border border-gray-200 bg-white px-4 py-3 text-base text-gray-900 placeholder-gray-400 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
             />
-            <span className="absolute bottom-3 right-3 text-xs font-semibold text-gray-400">JP</span>
+            <span className="absolute bottom-3 right-3 text-xs font-semibold text-gray-400">日</span>
           </div>
-          <p className="text-xs text-gray-400">Tip: Use kanji for better practice.</p>
+          <p className="text-xs text-gray-400">한자가 포함된 문장이면 더 좋아요.</p>
         </div>
 
         {/* 에러 메시지 */}
@@ -72,7 +78,7 @@ export default function SavePage() {
           disabled={loading || !content.trim()}
           className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98] disabled:opacity-50"
         >
-          {loading ? '저장 중...' : 'Save'}
+          {loading ? '저장 중...' : '저장'}
         </button>
       </div>
     </main>
