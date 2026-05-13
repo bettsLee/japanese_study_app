@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getEntry, EntryResponse, EntryType } from '@/lib/api/entries';
+import { saveTags } from '@/lib/api/tags';
 
 function TagContent() {
   const router = useRouter();
@@ -12,6 +13,9 @@ function TagContent() {
   const [entry, setEntry] = useState<EntryResponse | null>(null);
   const [selectedType, setSelectedType] = useState<EntryType>('SENTENCE');
   const [loading, setLoading] = useState(true);
+  const [tagInput, setTagInput] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!entryId) {
@@ -26,6 +30,41 @@ function TagContent() {
       .catch(() => router.replace('/save'))
       .finally(() => setLoading(false));
   }, [entryId, router]);
+
+  const addTag = () => {
+    const trimmed = tagInput.trim();
+    if (trimmed && !tags.includes(trimmed)) {
+      setTags(prev => [...prev, trimmed]);
+    }
+    setTagInput('');
+  };
+
+  const removeTag = (tag: string) => {
+    setTags(prev => prev.filter(t => t !== tag));
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addTag();
+    }
+  };
+
+  const handleDone = async () => {
+    if (tags.length === 0) {
+      router.push('/list');
+      return;
+    }
+    setSaving(true);
+    try {
+      await saveTags(entryId, tags);
+    } catch {
+      // 태그 저장 실패 시에도 목록으로 이동
+    } finally {
+      setSaving(false);
+      router.push('/list');
+    }
+  };
 
   if (loading) {
     return (
@@ -84,15 +123,56 @@ function TagContent() {
             </button>
           </div>
         </div>
+
+        {/* 태그 입력 */}
+        <div>
+          <p className="mb-3 text-sm font-medium text-gray-700">태그</p>
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={tagInput}
+              onChange={(e) => setTagInput(e.target.value)}
+              onKeyDown={handleKeyDown}
+              placeholder="태그 입력 후 Enter"
+              className="flex-1 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-gray-900 placeholder-gray-400 focus:border-sky-400 focus:outline-none focus:ring-1 focus:ring-sky-400"
+            />
+            <button
+              onClick={addTag}
+              className="rounded-xl bg-sky-400 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-sky-500"
+            >
+              추가
+            </button>
+          </div>
+          {tags.length > 0 && (
+            <div className="mt-3 flex flex-wrap gap-2">
+              {tags.map(tag => (
+                <span
+                  key={tag}
+                  className="flex items-center gap-1 rounded-full bg-sky-50 px-3 py-1 text-sm font-medium text-sky-600"
+                >
+                  {tag}
+                  <button
+                    onClick={() => removeTag(tag)}
+                    className="ml-0.5 text-sky-400 hover:text-sky-600"
+                    aria-label={`${tag} 태그 삭제`}
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* 완료 버튼 */}
       <div className="border-t border-gray-200 bg-white px-4 py-4">
         <button
-          onClick={() => router.push('/list')}
-          className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98]"
+          onClick={handleDone}
+          disabled={saving}
+          className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98] disabled:opacity-50"
         >
-          완료
+          {saving ? '저장 중...' : '완료'}
         </button>
       </div>
     </main>
