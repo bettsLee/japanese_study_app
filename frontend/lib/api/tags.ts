@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/client';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const TIMEOUT_MS = 30_000;
 
 export interface TagResponse {
   id: number;
@@ -15,9 +16,24 @@ async function getAuthHeader(): Promise<string> {
   return `Bearer ${session.access_token}`;
 }
 
+async function fetchWithTimeout(url: string, options: RequestInit): Promise<Response> {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } catch (err) {
+    if ((err as Error).name === 'AbortError') {
+      throw new Error('서버 응답 시간이 초과되었습니다. 잠시 후 다시 시도해주세요.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(id);
+  }
+}
+
 export async function saveTags(entryId: number, type: string, tags: string[]): Promise<TagResponse[]> {
   const auth = await getAuthHeader();
-  const res = await fetch(`${API_URL}/api/v1/entries/${entryId}/tags`, {
+  const res = await fetchWithTimeout(`${API_URL}/api/v1/entries/${entryId}/tags`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -31,7 +47,7 @@ export async function saveTags(entryId: number, type: string, tags: string[]): P
 
 export async function getTags(entryId: number): Promise<TagResponse[]> {
   const auth = await getAuthHeader();
-  const res = await fetch(`${API_URL}/api/v1/entries/${entryId}/tags`, {
+  const res = await fetchWithTimeout(`${API_URL}/api/v1/entries/${entryId}/tags`, {
     headers: { 'Authorization': auth },
   });
   if (!res.ok) throw new Error('태그 조회에 실패했습니다.');

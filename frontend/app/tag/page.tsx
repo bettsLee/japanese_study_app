@@ -3,7 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getEntry, EntryResponse, EntryType } from '@/lib/api/entries';
-import { saveTags } from '@/lib/api/tags';
+import { saveTags, getTags } from '@/lib/api/tags';
 
 function TagContent() {
   const router = useRouter();
@@ -16,16 +16,20 @@ function TagContent() {
   const [tagInput, setTagInput] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState('');
 
   useEffect(() => {
     if (!entryId) {
       router.replace('/save');
       return;
     }
-    getEntry(entryId)
-      .then((e) => {
+    Promise.all([getEntry(entryId), getTags(entryId)])
+      .then(([e, existingTags]) => {
         setEntry(e);
         setSelectedType(e.type);
+        if (existingTags.length > 0) {
+          setTags(existingTags.map(t => t.content));
+        }
       })
       .catch(() => router.replace('/save'))
       .finally(() => setLoading(false));
@@ -52,13 +56,13 @@ function TagContent() {
 
   const handleDone = async () => {
     setSaving(true);
+    setSaveError('');
     try {
       await saveTags(entryId, selectedType, tags);
-    } catch {
-      // 저장 실패 시에도 목록으로 이동
-    } finally {
-      setSaving(false);
       router.push('/list');
+    } catch (err) {
+      setSaveError((err as Error).message || '저장에 실패했습니다. 다시 시도해주세요.');
+      setSaving(false);
     }
   };
 
@@ -163,6 +167,7 @@ function TagContent() {
 
       {/* 완료 버튼 */}
       <div className="border-t border-gray-200 bg-white px-4 py-4">
+        {saveError && <p className="mb-3 text-sm text-red-500">{saveError}</p>}
         <button
           onClick={handleDone}
           disabled={saving}
