@@ -84,7 +84,7 @@ export default function ListPage() {
             </div>
 
             {/* 태그 */}
-            {entry.tags.length > 0 && (
+            {entry.tags?.length > 0 && (
               <div className="mb-3 flex flex-wrap gap-1.5">
                 {entry.tags.map(tag => (
                   <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
