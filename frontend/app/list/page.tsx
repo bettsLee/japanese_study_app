@@ -83,6 +83,17 @@ export default function ListPage() {
               <p className="text-sm text-gray-900">{entry.content}</p>
             </div>
 
+            {/* 태그 */}
+            {entry.tags.length > 0 && (
+              <div className="mb-3 flex flex-wrap gap-1.5">
+                {entry.tags.map(tag => (
+                  <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
+                    {tag.content}
+                  </span>
+                ))}
+              </div>
+            )}
+
             {/* 퀴즈 통계 */}
             <div className="mb-3 flex items-center gap-4 text-xs text-gray-500">
               <span>노출 {entry.quizCount}회</span>

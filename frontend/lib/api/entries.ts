@@ -13,6 +13,7 @@ export interface EntryResponse {
   quizCount: number;
   correctCount: number;
   inQuizPool: boolean;
+  tags: { id: number; content: string; createdAt: string }[];
 }
 
 async function getAuthHeader(): Promise<string> {
