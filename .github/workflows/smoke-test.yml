@@ -31,10 +31,10 @@ jobs:
         run: |
           URL="https://japanese-study-app.onrender.com/health"
           for i in 1 2 3 4 5; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$URL")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "$URL" || echo "000")
             echo "시도 $i → HTTP $STATUS"
             if [ "$STATUS" = "200" ]; then
-              RESPONSE=$(curl -s --max-time 60 "$URL")
+              RESPONSE=$(curl -s --max-time 60 "$URL" || echo "")
               echo "$RESPONSE" | grep -q '"status":"OK"' || (echo "❌ 응답 body 불일치" && exit 1)
               echo "✅ 통과"
               exit 0
