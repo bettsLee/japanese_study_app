@@ -23,10 +23,11 @@ function TagContent() {
       router.replace('/save');
       return;
     }
-    Promise.all([getEntry(entryId), getTags(entryId)])
-      .then(([e, existingTags]) => {
+    getEntry(entryId)
+      .then(async (e) => {
         setEntry(e);
         setSelectedType(e.type);
+        const existingTags = await getTags(entryId).catch(() => []);
         if (existingTags.length > 0) {
           setTags(existingTags.map(t => t.content));
         }
