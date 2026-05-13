@@ -17,7 +17,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -57,31 +59,60 @@ public class SecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder(@Value("${supabase.jwks-uri}") String jwksUri) throws Exception {
-        JsonNode key = new ObjectMapper()
-            .readTree(new URL(jwksUri))
-            .get("keys").get(0);
+    public JwtDecoder jwtDecoder(@Value("${supabase.jwks-uri}") String jwksUri) {
+        // JWKS fetch를 첫 요청 시점으로 지연
+        return new LazyEcJwtDecoder(jwksUri);
+    }
 
-        byte[] x = Base64.getUrlDecoder().decode(key.get("x").asText());
-        byte[] y = Base64.getUrlDecoder().decode(key.get("y").asText());
+    private static class LazyEcJwtDecoder implements JwtDecoder {
+        private final String jwksUri;
+        private volatile JwtDecoder delegate;
 
-        AlgorithmParameters params = AlgorithmParameters.getInstance("EC");
-        params.init(new ECGenParameterSpec("secp256r1"));
-        ECParameterSpec ecSpec = params.getParameterSpec(ECParameterSpec.class);
+        LazyEcJwtDecoder(String jwksUri) {
+            this.jwksUri = jwksUri;
+        }
 
-        ECPublicKey ecPublicKey = (ECPublicKey) KeyFactory.getInstance("EC")
-            .generatePublic(new ECPublicKeySpec(
-                new ECPoint(new BigInteger(1, x), new BigInteger(1, y)), ecSpec));
+        @Override
+        public Jwt decode(String token) throws JwtException {
+            if (delegate == null) {
+                synchronized (this) {
+                    if (delegate == null) {
+                        delegate = buildDecoder();
+                    }
+                }
+            }
+            return delegate.decode(token);
+        }
 
-        // key_ops/use 제약 없이 깨끗한 ECKey 생성
-        ECKey cleanKey = new ECKey.Builder(Curve.P_256, ecPublicKey)
-            .keyID(key.get("kid").asText())
-            .build();
+        private JwtDecoder buildDecoder() {
+            try {
+                JsonNode key = new ObjectMapper()
+                    .readTree(new URL(jwksUri))
+                    .get("keys").get(0);
 
-        DefaultJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>();
-        processor.setJWSKeySelector(new JWSVerificationKeySelector<>(
-            JWSAlgorithm.ES256, new ImmutableJWKSet<>(new JWKSet(cleanKey))));
+                byte[] x = Base64.getUrlDecoder().decode(key.get("x").asText());
+                byte[] y = Base64.getUrlDecoder().decode(key.get("y").asText());
 
-        return new NimbusJwtDecoder(processor);
+                AlgorithmParameters params = AlgorithmParameters.getInstance("EC");
+                params.init(new ECGenParameterSpec("secp256r1"));
+                ECParameterSpec ecSpec = params.getParameterSpec(ECParameterSpec.class);
+
+                ECPublicKey ecPublicKey = (ECPublicKey) KeyFactory.getInstance("EC")
+                    .generatePublic(new ECPublicKeySpec(
+                        new ECPoint(new BigInteger(1, x), new BigInteger(1, y)), ecSpec));
+
+                ECKey cleanKey = new ECKey.Builder(Curve.P_256, ecPublicKey)
+                    .keyID(key.get("kid").asText())
+                    .build();
+
+                DefaultJWTProcessor<SecurityContext> processor = new DefaultJWTProcessor<>();
+                processor.setJWSKeySelector(new JWSVerificationKeySelector<>(
+                    JWSAlgorithm.ES256, new ImmutableJWKSet<>(new JWKSet(cleanKey))));
+
+                return new NimbusJwtDecoder(processor);
+            } catch (Exception e) {
+                throw new JwtException("JWKS 로드 실패: " + e.getMessage(), e);
+            }
+        }
     }
 }
