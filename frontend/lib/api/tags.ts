@@ -41,10 +41,7 @@ export async function saveTags(entryId: number, type: string, tags: string[]): P
     },
     body: JSON.stringify({ type, tags }),
   });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    throw new Error(`태그 저장 실패 (${res.status}${body ? ': ' + body.slice(0, 100) : ''})`);
-  }
+  if (!res.ok) throw new Error('태그 저장에 실패했습니다.');
   return res.json();
 }
 
