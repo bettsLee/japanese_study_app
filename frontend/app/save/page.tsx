@@ -3,12 +3,19 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { saveEntry } from '@/lib/api/entries';
+import { createClient } from '@/lib/supabase/client';
 
 export default function SavePage() {
   const router = useRouter();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push('/login');
+  };
 
   const handleSave = async () => {
     if (!content.trim()) return;
@@ -42,6 +49,13 @@ export default function SavePage() {
           className="ml-auto text-sm text-sky-500 font-medium"
         >
           목록 보기
+        </button>
+        <button
+          onClick={handleLogout}
+          className="ml-3 text-sm text-gray-400 hover:text-gray-600"
+          aria-label="로그아웃"
+        >
+          로그아웃
         </button>
       </header>
 

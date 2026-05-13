@@ -48,7 +48,7 @@ export async function saveEntry(type: EntryType, content: string): Promise<Entry
     },
     body: JSON.stringify({ type, content }),
   });
-  if (!res.ok) throw new Error('저장에 실패했습니다.');
+  if (!res.ok) throw new Error(`저장 실패 (${res.status})`);
   return res.json();
 }
 
