@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS tags (
+    id          BIGSERIAL PRIMARY KEY,
+    entry_id    BIGINT NOT NULL REFERENCES entries(id) ON DELETE CASCADE,
+    content     VARCHAR(255) NOT NULL,
+    created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);

@@ -6,9 +6,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Base64;
 import java.util.List;
 
 @RestController
@@ -25,44 +25,25 @@ public class EntryController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "저장", description = "문장 또는 단어를 저장하고 저장일을 자동 기록")
-    public EntryResponse save(
-            @RequestBody @Valid EntryRequest request,
-            @RequestHeader("Authorization") String auth) {
-        return entryService.save(request, extractUserId(auth));
+    public EntryResponse save(@RequestBody @Valid EntryRequest request, Authentication auth) {
+        return entryService.save(request, auth.getName());
     }
 
     @GetMapping
     @Operation(summary = "목록 조회", description = "로그인한 유저의 저장 목록 조회")
-    public List<EntryResponse> list(@RequestHeader("Authorization") String auth) {
-        return entryService.findByUser(extractUserId(auth));
+    public List<EntryResponse> list(Authentication auth) {
+        return entryService.findByUser(auth.getName());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "단건 조회", description = "저장된 항목 단건 조회")
-    public EntryResponse getById(
-            @PathVariable Long id,
-            @RequestHeader("Authorization") String auth) {
-        return entryService.findByIdAndUser(id, extractUserId(auth));
+    public EntryResponse getById(@PathVariable Long id, Authentication auth) {
+        return entryService.findByIdAndUser(id, auth.getName());
     }
 
     @PutMapping("/{id}/quiz-add")
-    @Operation(summary = "퀴즈 강제 추가", description = "정답률과 무관하게 퀴즈 대상으로 강제 추가")
-    public EntryResponse forceAddToQuiz(
-            @PathVariable Long id,
-            @RequestHeader("Authorization") String auth) {
-        return entryService.forceAddToQuiz(id, extractUserId(auth));
-    }
-
-    // Supabase JWT의 sub 클레임을 userId로 추출
-    private String extractUserId(String authHeader) {
-        String token = authHeader.startsWith("Bearer ") ? authHeader.substring(7) : authHeader;
-        String[] parts = token.split("\\.");
-        if (parts.length < 2) throw new IllegalArgumentException("Invalid token");
-        String payloadJson = new String(Base64.getUrlDecoder().decode(parts[1]));
-        int subIdx = payloadJson.indexOf("\"sub\":\"");
-        if (subIdx == -1) throw new IllegalArgumentException("No sub in token");
-        int start = subIdx + 7;
-        int end = payloadJson.indexOf("\"", start);
-        return payloadJson.substring(start, end);
+    @Operation(summary = "퀴즈 강제 추가", description = "정답률과 관계없이 퀴즈 대상으로 강제 추가")
+    public EntryResponse forceAddToQuiz(@PathVariable Long id, Authentication auth) {
+        return entryService.forceAddToQuiz(id, auth.getName());
     }
 }
