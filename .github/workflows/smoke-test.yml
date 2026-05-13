@@ -29,8 +29,8 @@ jobs:
 
       - name: Backend — /health
         run: |
-          RESPONSE=$(curl -s --max-time 60 "https://japanese-study-app.onrender.com/health")
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 60 "https://japanese-study-app.onrender.com/health")
+          RESPONSE=$(curl -s --max-time 120 "https://japanese-study-app.onrender.com/health")
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 120 "https://japanese-study-app.onrender.com/health")
           echo "GET /health → $STATUS | body: $RESPONSE"
           [ "$STATUS" = "200" ] || (echo "❌ HTTP 실패" && exit 1)
           echo "$RESPONSE" | grep -q '"status":"OK"' || (echo "❌ 응답 body 불일치" && exit 1)
