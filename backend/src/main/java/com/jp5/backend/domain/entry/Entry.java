@@ -58,6 +58,10 @@ public class Entry {
         this.forceIncludeInQuiz = true;
     }
 
+    public void updateType(EntryType type) {
+        this.type = type;
+    }
+
     public Long getId() { return id; }
     public String getUserId() { return userId; }
     public EntryType getType() { return type; }

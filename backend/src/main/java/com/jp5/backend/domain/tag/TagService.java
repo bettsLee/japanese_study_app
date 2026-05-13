@@ -23,15 +23,18 @@ public class TagService {
         this.entryRepository = entryRepository;
     }
 
-    // 기존 태그를 모두 교체 (덮어쓰기)
+    // 타입 업데이트 + 기존 태그를 모두 교체 (덮어쓰기)
     public List<TagResponse> save(Long entryId, String userId, TagRequest request) {
         Entry entry = entryRepository.findByIdAndUserId(entryId, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
+        entry.updateType(request.type());
+        entryRepository.save(entry);
         tagRepository.deleteAllByEntryId(entryId);
-        List<Tag> tags = request.tags().stream()
-                .filter(t -> !t.isBlank())
-                .map(t -> new Tag(entry, t.trim()))
-                .toList();
+        List<Tag> tags = request.tags() == null ? List.of() :
+                request.tags().stream()
+                        .filter(t -> !t.isBlank())
+                        .map(t -> new Tag(entry, t.trim()))
+                        .toList();
         return tagRepository.saveAll(tags).stream().map(TagResponse::from).toList();
     }
 
