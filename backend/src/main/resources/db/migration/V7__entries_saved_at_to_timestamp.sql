@@ -1,0 +1,2 @@
+ALTER TABLE entries
+    ALTER COLUMN saved_at TYPE TIMESTAMP USING saved_at::TIMESTAMP;
