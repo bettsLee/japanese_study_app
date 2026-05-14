@@ -1,28 +1,19 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { createClient } from '@/lib/supabase/client';
 
 function LoginContent() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
   const urlDetail = searchParams.get('detail');
 
-  const [error, setError] = useState(
-    urlError === 'auth_error'
-      ? `구글 로그인에 실패했습니다. 다시 시도해주세요.${urlDetail ? ` (${urlDetail})` : ''}`
-      : ''
-  );
+  const error = urlError === 'auth_error'
+    ? `구글 로그인에 실패했습니다. 다시 시도해주세요.${urlDetail ? ` (${urlDetail})` : ''}`
+    : '';
 
-  const handleGoogleLogin = async () => {
-    setError('');
-    const supabase = createClient();
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: `${window.location.origin}/auth/callback?next=/save` },
-    });
-    if (error) setError(error.message);
+  const handleGoogleLogin = () => {
+    window.location.href = '/auth/login';
   };
 
   return (

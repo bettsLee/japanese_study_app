@@ -1,15 +1,34 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { saveEntry } from '@/lib/api/entries';
 import { createClient } from '@/lib/supabase/client';
+import { upsertMe } from '@/lib/api/users';
 
 export default function SavePage() {
   const router = useRouter();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const syncUser = async () => {
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      try {
+        await upsertMe(
+          session.access_token,
+          session.user.email ?? '',
+          session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? null
+        );
+      } catch (err) {
+        console.error('[save] upsertMe 실패:', err);
+      }
+    };
+    syncUser();
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
