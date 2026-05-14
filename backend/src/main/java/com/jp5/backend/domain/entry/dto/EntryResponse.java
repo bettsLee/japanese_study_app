@@ -3,14 +3,14 @@ package com.jp5.backend.domain.entry.dto;
 import com.jp5.backend.domain.entry.Entry;
 import com.jp5.backend.domain.entry.EntryType;
 import com.jp5.backend.domain.tag.dto.TagResponse;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record EntryResponse(
     Long id,
     EntryType type,
     String content,
-    LocalDate savedAt,
+    LocalDateTime savedAt,
     int quizCount,
     int correctCount,
     boolean inQuizPool,

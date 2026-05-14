@@ -1,7 +1,7 @@
 package com.jp5.backend.domain.entry;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "entries")
@@ -22,7 +22,7 @@ public class Entry {
     private String content;
 
     @Column(nullable = false)
-    private LocalDate savedAt;
+    private LocalDateTime savedAt;
 
     @Column(name = "quiz_count", nullable = false)
     private int quizCount = 0;
@@ -36,7 +36,7 @@ public class Entry {
 
     @PrePersist
     protected void onCreate() {
-        this.savedAt = LocalDate.now();
+        this.savedAt = LocalDateTime.now(java.time.ZoneOffset.UTC);
     }
 
     protected Entry() {}
@@ -66,7 +66,7 @@ public class Entry {
     public String getUserId() { return userId; }
     public EntryType getType() { return type; }
     public String getContent() { return content; }
-    public LocalDate getSavedAt() { return savedAt; }
+    public LocalDateTime getSavedAt() { return savedAt; }
     public int getQuizCount() { return quizCount; }
     public int getCorrectCount() { return correctCount; }
     public boolean isForceIncludeInQuiz() { return forceIncludeInQuiz; }
