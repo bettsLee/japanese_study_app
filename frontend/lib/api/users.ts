@@ -2,7 +2,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function upsertMe(token: string, email: string, name: string | null): Promise<void> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 5000);
+  // Render 무료 플랜 콜드 스타트 대비 30초
+  const timeout = setTimeout(() => controller.abort(), 30000);
   try {
     const res = await fetch(`${API_URL}/api/v1/users/me`, {
       method: 'POST',
