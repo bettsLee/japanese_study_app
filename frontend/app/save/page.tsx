@@ -24,7 +24,9 @@ export default function SavePage() {
           session.user.user_metadata?.full_name ?? session.user.user_metadata?.name ?? null
         );
       } catch (err) {
+        const msg = err instanceof Error ? err.message : String(err);
         console.error('[save] upsertMe 실패:', err);
+        setError(`[디버그] upsert 실패: ${msg}`);
       }
     };
     syncUser();
