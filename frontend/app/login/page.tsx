@@ -1,12 +1,25 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+
+// 카카오톡, 라인, 인스타 등 앱 내 브라우저(WebView) 감지
+function isWebView(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent;
+  return /KAKAOTALK|NAVER|Line\/|Instagram|FB_IAB|FBAN|Twitter|Snapchat/i.test(ua) ||
+    (/Android/i.test(ua) && /wv\)/i.test(ua));
+}
 
 function LoginContent() {
   const searchParams = useSearchParams();
   const urlError = searchParams.get('error');
   const urlDetail = searchParams.get('detail');
+  const [webView, setWebView] = useState(false);
+
+  useEffect(() => {
+    setWebView(isWebView());
+  }, []);
 
   const error = urlError === 'auth_error'
     ? `구글 로그인에 실패했습니다. 다시 시도해주세요.${urlDetail ? ` (${urlDetail})` : ''}`
@@ -43,11 +56,21 @@ function LoginContent() {
         {/* 에러 메시지 */}
         {error && <p className="mb-4 text-sm text-red-500">{error}</p>}
 
+        {/* WebView 경고 */}
+        {webView && (
+          <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            카카오톡·라인 등 앱 내 브라우저에서는 Google 로그인이 차단됩니다.
+            <br />
+            <strong>Chrome 또는 Safari</strong>에서 직접 열어주세요.
+          </div>
+        )}
+
         {/* 구글 로그인 버튼 */}
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98]"
+          disabled={webView}
+          className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3.5 text-sm font-semibold text-gray-700 shadow-sm transition hover:bg-gray-50 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
         >
           <svg viewBox="0 0 24 24" className="h-5 w-5" aria-hidden="true">
             <path
