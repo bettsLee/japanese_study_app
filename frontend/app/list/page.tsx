@@ -166,10 +166,10 @@ export default function ListPage() {
                   </span>
                 ))}
                 <button
-                  onClick={() => router.push(`/tag?entryId=${entry.id}`)}
+                  onClick={() => router.push(`/detail/${entry.id}`)}
                   className="rounded-full border border-dashed border-gray-300 px-2.5 py-0.5 text-xs text-gray-400 hover:border-sky-400 hover:text-sky-500"
                 >
-                  {entry.tags?.length > 0 ? '태그 수정' : '+ 태그'}
+                  {entry.tags?.length > 0 ? '상세보기' : 'AI 분석'}
                 </button>
               </div>
 

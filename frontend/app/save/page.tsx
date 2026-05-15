@@ -51,8 +51,8 @@ export default function SavePage() {
     setLoading(true);
     setError('');
     try {
-      const entry = await saveEntry('SENTENCE', content.trim());
-      router.push(`/tag?entryId=${entry.id}`);
+      await saveEntry('SENTENCE', content.trim());
+      router.push('/list');
     } catch {
       setError('저장에 실패했습니다. 다시 시도해주세요.');
       setLoading(false);
