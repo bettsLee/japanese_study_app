@@ -51,4 +51,10 @@ public class EntryService {
         entry.forceAddToQuiz();
         return EntryResponse.from(entryRepository.save(entry));
     }
+
+    public void delete(Long id, String userId) {
+        Entry entry = entryRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
+        entryRepository.delete(entry);
+    }
 }

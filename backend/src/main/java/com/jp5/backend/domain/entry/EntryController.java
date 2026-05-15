@@ -42,8 +42,15 @@ public class EntryController {
     }
 
     @PutMapping("/{id}/quiz-add")
-    @Operation(summary = "퀴즈 강제 추가", description = "정답률과 관계없이 퀴즈 대상으로 강제 추가")
+    @Operation(summary = "퀴즈 강제 추가", description = "정답률과 관계없이 퀴즈 대상으로 강제 추가 (노출수·정답수 0으로 리셋)")
     public EntryResponse forceAddToQuiz(@PathVariable Long id, Authentication auth) {
         return entryService.forceAddToQuiz(id, auth.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "삭제", description = "저장된 항목 완전 삭제")
+    public void delete(@PathVariable Long id, Authentication auth) {
+        entryService.delete(id, auth.getName());
     }
 }
