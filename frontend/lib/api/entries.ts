@@ -79,3 +79,12 @@ export async function forceAddToQuiz(id: number): Promise<EntryResponse> {
   if (!res.ok) throw new Error('퀴즈 추가에 실패했습니다.');
   return res.json();
 }
+
+export async function deleteEntry(id: number): Promise<void> {
+  const auth = await getAuthHeader();
+  const res = await fetchWithTimeout(`${API_URL}/api/v1/entries/${id}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': auth },
+  });
+  if (!res.ok) throw new Error('삭제에 실패했습니다.');
+}

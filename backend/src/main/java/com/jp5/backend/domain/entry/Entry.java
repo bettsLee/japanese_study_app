@@ -55,6 +55,8 @@ public class Entry {
     }
 
     public void forceAddToQuiz() {
+        this.quizCount = 0;
+        this.correctCount = 0;
         this.forceIncludeInQuiz = true;
     }
 
