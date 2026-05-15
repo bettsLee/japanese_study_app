@@ -6,11 +6,19 @@ import { saveEntry } from '@/lib/api/entries';
 import { createClient } from '@/lib/supabase/client';
 import { upsertMe } from '@/lib/api/users';
 
+// 한국어·영어 알파벳 감지 (히라가나·가타카나·한자·숫자·특수문자·공백 허용)
+const INVALID_CHARS_RE = /[A-Za-z가-힣ᄀ-ᇿ㄰-㆏]/;
+
 export default function SavePage() {
   const router = useRouter();
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const inputError =
+    content.trim() && INVALID_CHARS_RE.test(content)
+      ? '일본어(히라가나/가타카나/한자)만 입력 가능해요'
+      : '';
 
   useEffect(() => {
     const syncUser = async () => {
@@ -39,7 +47,7 @@ export default function SavePage() {
   };
 
   const handleSave = async () => {
-    if (!content.trim()) return;
+    if (!content.trim() || inputError) return;
     setLoading(true);
     setError('');
     try {
@@ -99,10 +107,14 @@ export default function SavePage() {
             />
             <span className="absolute bottom-3 right-3 text-xs font-semibold text-gray-400">日</span>
           </div>
-          <p className="text-xs text-gray-400">한자가 포함된 문장이면 더 좋아요.</p>
+          {inputError ? (
+            <p className="text-xs text-red-500">{inputError}</p>
+          ) : (
+            <p className="text-xs text-gray-400">한자가 포함된 문장이면 더 좋아요.</p>
+          )}
         </div>
 
-        {/* 에러 메시지 */}
+        {/* API 에러 메시지 */}
         {error && <p className="text-sm text-red-500">{error}</p>}
       </div>
 
@@ -110,7 +122,7 @@ export default function SavePage() {
       <div className="border-t border-gray-200 bg-white px-4 py-4">
         <button
           onClick={handleSave}
-          disabled={loading || !content.trim()}
+          disabled={loading || !content.trim() || !!inputError}
           className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98] disabled:opacity-50"
         >
           {loading ? '저장 중...' : '저장'}
