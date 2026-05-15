@@ -133,7 +133,11 @@ export default function ListPage() {
           )}
 
           {entries.map(entry => (
-            <div key={entry.id} className="rounded-xl border border-gray-200 bg-white p-4">
+            <div
+              key={entry.id}
+              onClick={() => router.push(`/detail/${entry.id}`)}
+              className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 transition hover:border-sky-300 hover:shadow-sm active:scale-[0.99]"
+            >
               {/* 타입 + 내용 + 삭제 버튼 */}
               <div className="mb-3 flex items-start gap-2">
                 <span className={`mt-0.5 shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold ${
@@ -143,7 +147,7 @@ export default function ListPage() {
                 </span>
                 <p className="flex-1 text-sm text-gray-900">{entry.content}</p>
                 <button
-                  onClick={() => setConfirmId(entry.id)}
+                  onClick={(e) => { e.stopPropagation(); setConfirmId(entry.id); }}
                   disabled={deletingId === entry.id}
                   className="ml-1 shrink-0 rounded-md p-1 text-gray-300 hover:bg-red-50 hover:text-red-400 disabled:opacity-40"
                   aria-label="삭제"
@@ -189,7 +193,7 @@ export default function ListPage() {
                 )}
                 {!entry.inQuizPool && (
                   <button
-                    onClick={() => handleForceAdd(entry.id)}
+                    onClick={(e) => { e.stopPropagation(); handleForceAdd(entry.id); }}
                     disabled={addingId === entry.id}
                     className="rounded-lg bg-sky-400 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-500 disabled:opacity-50"
                   >
