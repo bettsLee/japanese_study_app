@@ -163,15 +163,19 @@ export default function ListPage() {
               </div>
 
               {/* 태그 */}
-              {entry.tags?.length > 0 && (
-                <div className="mb-3 flex flex-wrap items-center gap-1.5">
-                  {entry.tags.map(tag => (
-                    <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
-                      {tag.content}
-                    </span>
-                  ))}
-                </div>
-              )}
+              <div className="mb-3 flex flex-wrap items-center gap-1.5">
+                {entry.tags?.map(tag => (
+                  <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
+                    {tag.content}
+                  </span>
+                ))}
+                <button
+                  onClick={() => router.push(`/detail/${entry.id}`)}
+                  className="rounded-full border border-dashed border-gray-300 px-2.5 py-0.5 text-xs text-gray-400 hover:border-sky-400 hover:text-sky-500"
+                >
+                  {entry.tags?.length > 0 ? '상세보기' : 'AI 분석'}
+                </button>
+              </div>
 
               {/* 퀴즈 통계 */}
               <div className="mb-3 flex items-center gap-4 text-xs text-gray-500">
