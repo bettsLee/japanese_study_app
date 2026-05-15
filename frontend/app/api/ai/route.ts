@@ -33,7 +33,8 @@ suggestedTags는 이 표현의 특성을 나타내는 태그 3~5개. 예시: 명
   );
 
   if (!res.ok) {
-    return NextResponse.json({ error: 'Gemini API 호출 실패' }, { status: 502 });
+    const errBody = await res.json().catch(() => ({}));
+    return NextResponse.json({ error: 'Gemini API 호출 실패', status: res.status, detail: errBody }, { status: 502 });
   }
 
   const data = await res.json();
