@@ -133,7 +133,11 @@ export default function ListPage() {
           )}
 
           {entries.map(entry => (
-            <div key={entry.id} className="rounded-xl border border-gray-200 bg-white p-4">
+            <div
+              key={entry.id}
+              onClick={() => router.push(`/detail/${entry.id}`)}
+              className="cursor-pointer rounded-xl border border-gray-200 bg-white p-4 transition hover:border-sky-300 hover:shadow-sm active:scale-[0.99]"
+            >
               {/* 타입 + 내용 + 삭제 버튼 */}
               <div className="mb-3 flex items-start gap-2">
                 <span className={`mt-0.5 shrink-0 rounded-md px-2 py-0.5 text-xs font-semibold ${
@@ -143,7 +147,7 @@ export default function ListPage() {
                 </span>
                 <p className="flex-1 text-sm text-gray-900">{entry.content}</p>
                 <button
-                  onClick={() => setConfirmId(entry.id)}
+                  onClick={(e) => { e.stopPropagation(); setConfirmId(entry.id); }}
                   disabled={deletingId === entry.id}
                   className="ml-1 shrink-0 rounded-md p-1 text-gray-300 hover:bg-red-50 hover:text-red-400 disabled:opacity-40"
                   aria-label="삭제"
@@ -159,19 +163,15 @@ export default function ListPage() {
               </div>
 
               {/* 태그 */}
-              <div className="mb-3 flex flex-wrap items-center gap-1.5">
-                {entry.tags?.map(tag => (
-                  <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
-                    {tag.content}
-                  </span>
-                ))}
-                <button
-                  onClick={() => router.push(`/detail/${entry.id}`)}
-                  className="rounded-full border border-dashed border-gray-300 px-2.5 py-0.5 text-xs text-gray-400 hover:border-sky-400 hover:text-sky-500"
-                >
-                  {entry.tags?.length > 0 ? '상세보기' : 'AI 분석'}
-                </button>
-              </div>
+              {entry.tags?.length > 0 && (
+                <div className="mb-3 flex flex-wrap items-center gap-1.5">
+                  {entry.tags.map(tag => (
+                    <span key={tag.id} className="rounded-full bg-sky-50 px-2.5 py-0.5 text-xs font-medium text-sky-600">
+                      {tag.content}
+                    </span>
+                  ))}
+                </div>
+              )}
 
               {/* 퀴즈 통계 */}
               <div className="mb-3 flex items-center gap-4 text-xs text-gray-500">
@@ -189,7 +189,7 @@ export default function ListPage() {
                 )}
                 {!entry.inQuizPool && (
                   <button
-                    onClick={() => handleForceAdd(entry.id)}
+                    onClick={(e) => { e.stopPropagation(); handleForceAdd(entry.id); }}
                     disabled={addingId === entry.id}
                     className="rounded-lg bg-sky-400 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-sky-500 disabled:opacity-50"
                   >
