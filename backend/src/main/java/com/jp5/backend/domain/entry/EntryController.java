@@ -1,6 +1,7 @@
 package com.jp5.backend.domain.entry;
 
 import com.jp5.backend.domain.entry.dto.EntryRequest;
+import com.jp5.backend.domain.entry.dto.EntryUpdateRequest;
 import com.jp5.backend.domain.entry.dto.EntryResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,6 +40,12 @@ public class EntryController {
     @Operation(summary = "단건 조회", description = "저장된 항목 단건 조회")
     public EntryResponse getById(@PathVariable Long id, Authentication auth) {
         return entryService.findByIdAndUser(id, auth.getName());
+    }
+
+    @PatchMapping("/{id}")
+    @Operation(summary = "내용 수정", description = "저장된 항목의 내용 수정 (교정 수락 등)")
+    public EntryResponse updateContent(@PathVariable Long id, @RequestBody @Valid EntryUpdateRequest request, Authentication auth) {
+        return entryService.updateContent(id, request.content(), auth.getName());
     }
 
     @PutMapping("/{id}/quiz-add")

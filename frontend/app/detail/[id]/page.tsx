@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getEntry, EntryResponse } from '@/lib/api/entries';
+import { getEntry, updateEntry, EntryResponse } from '@/lib/api/entries';
 import { saveTags, getTags } from '@/lib/api/tags';
 
 interface AiResult {
@@ -11,6 +11,8 @@ interface AiResult {
   correction: string;
   suggestedTags: string[];
 }
+
+const AI_CACHE_PREFIX = 'ai_result_';
 
 export default function DetailPage() {
   const router = useRouter();
@@ -24,6 +26,7 @@ export default function DetailPage() {
   const [aiError, setAiError] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState('');
+  const [accepting, setAccepting] = useState(false);
 
   useEffect(() => {
     if (!entryId) {
@@ -38,10 +41,18 @@ export default function DetailPage() {
           getTags(entryId).catch(() => []),
         ]);
         setEntry(e);
-        // 기존 태그를 기본 선택 상태로
         setSelectedTags(existingTags.map(t => t.content));
 
-        // Gemini AI 분석
+        // 캐시 확인
+        const cacheKey = `${AI_CACHE_PREFIX}${entryId}`;
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+          setAiResult(JSON.parse(cached));
+          setAiLoading(false);
+          return;
+        }
+
+        // 캐시 없으면 AI 호출
         const aiRes = await fetch('/api/ai', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -49,6 +60,7 @@ export default function DetailPage() {
         });
         if (!aiRes.ok) throw new Error('AI 분석에 실패했습니다.');
         const result: AiResult = await aiRes.json();
+        sessionStorage.setItem(cacheKey, JSON.stringify(result));
         setAiResult(result);
       } catch (err) {
         setAiError(err instanceof Error ? err.message : 'AI 분석에 실패했습니다.');
@@ -79,6 +91,22 @@ export default function DetailPage() {
     }
   };
 
+  const handleAcceptCorrection = async () => {
+    if (!entry || !aiResult) return;
+    setAccepting(true);
+    try {
+      const updated = await updateEntry(entryId, aiResult.correction);
+      setEntry(updated);
+      // 캐시 무효화 (내용이 바뀌었으므로)
+      sessionStorage.removeItem(`${AI_CACHE_PREFIX}${entryId}`);
+      setAiResult(prev => prev ? { ...prev, correction: '올바른 표현입니다' } : null);
+    } catch {
+      setSaveError('교정 수락에 실패했습니다.');
+    } finally {
+      setAccepting(false);
+    }
+  };
+
   if (!entry && aiLoading) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -87,11 +115,13 @@ export default function DetailPage() {
     );
   }
 
-  // 태그 풀: 기존 태그 + AI 추천 태그 (중복 제거)
   const allTagOptions = [
     ...selectedTags,
     ...(aiResult?.suggestedTags ?? []).filter(t => !selectedTags.includes(t)),
   ];
+
+  const hasCorrectionSuggestion =
+    aiResult?.correction && aiResult.correction !== '올바른 표현입니다';
 
   return (
     <main className="flex min-h-screen flex-col bg-gray-50">
@@ -150,6 +180,15 @@ export default function DetailPage() {
             <div className="rounded-xl border border-gray-200 bg-white p-4">
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-sky-500">교정 제안</p>
               <p className="text-sm text-gray-800">{aiResult.correction}</p>
+              {hasCorrectionSuggestion && (
+                <button
+                  onClick={handleAcceptCorrection}
+                  disabled={accepting}
+                  className="mt-3 rounded-lg bg-sky-400 px-4 py-2 text-xs font-semibold text-white hover:bg-sky-500 disabled:opacity-50"
+                >
+                  {accepting ? '수락 중...' : '교정 수락'}
+                </button>
+              )}
             </div>
           </div>
         )}

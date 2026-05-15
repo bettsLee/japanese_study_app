@@ -60,6 +60,10 @@ public class Entry {
         this.forceIncludeInQuiz = true;
     }
 
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
     public void updateType(EntryType type) {
         this.type = type;
     }

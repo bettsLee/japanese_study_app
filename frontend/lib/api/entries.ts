@@ -80,6 +80,20 @@ export async function forceAddToQuiz(id: number): Promise<EntryResponse> {
   return res.json();
 }
 
+export async function updateEntry(id: number, content: string): Promise<EntryResponse> {
+  const auth = await getAuthHeader();
+  const res = await fetchWithTimeout(`${API_URL}/api/v1/entries/${id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': auth,
+    },
+    body: JSON.stringify({ content }),
+  });
+  if (!res.ok) throw new Error('수정에 실패했습니다.');
+  return res.json();
+}
+
 export async function deleteEntry(id: number): Promise<void> {
   const auth = await getAuthHeader();
   const res = await fetchWithTimeout(`${API_URL}/api/v1/entries/${id}`, {
