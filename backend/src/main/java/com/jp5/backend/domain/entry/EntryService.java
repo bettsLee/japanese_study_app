@@ -45,6 +45,13 @@ public class EntryService {
         return EntryResponse.from(entry, tags);
     }
 
+    public EntryResponse updateContent(Long id, String content, String userId) {
+        Entry entry = entryRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
+        entry.updateContent(content);
+        return EntryResponse.from(entryRepository.save(entry));
+    }
+
     public EntryResponse forceAddToQuiz(Long id, String userId) {
         Entry entry = entryRepository.findByIdAndUserId(id, userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Entry not found"));
