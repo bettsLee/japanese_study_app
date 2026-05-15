@@ -9,6 +9,7 @@ interface AiResult {
   translation: string;
   analysis: string;
   correction: string;
+  correctedContent: string;
   suggestedTags: string[];
 }
 
@@ -92,14 +93,13 @@ export default function DetailPage() {
   };
 
   const handleAcceptCorrection = async () => {
-    if (!entry || !aiResult) return;
+    if (!entry || !aiResult?.correctedContent) return;
     setAccepting(true);
     try {
-      const updated = await updateEntry(entryId, aiResult.correction);
+      const updated = await updateEntry(entryId, aiResult.correctedContent);
       setEntry(updated);
-      // 캐시 무효화 (내용이 바뀌었으므로)
       sessionStorage.removeItem(`${AI_CACHE_PREFIX}${entryId}`);
-      setAiResult(prev => prev ? { ...prev, correction: '올바른 표현입니다' } : null);
+      setAiResult(prev => prev ? { ...prev, correctedContent: '', correction: '올바른 표현입니다' } : null);
     } catch {
       setSaveError('교정 수락에 실패했습니다.');
     } finally {
@@ -121,7 +121,7 @@ export default function DetailPage() {
   ];
 
   const hasCorrectionSuggestion =
-    aiResult?.correction && aiResult.correction !== '올바른 표현입니다';
+    !!aiResult?.correctedContent && aiResult.correctedContent !== '';
 
   return (
     <main className="flex min-h-screen flex-col bg-gray-50">
@@ -180,6 +180,12 @@ export default function DetailPage() {
             <div className="rounded-xl border border-gray-200 bg-white p-4">
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-sky-500">교정 제안</p>
               <p className="text-sm text-gray-800">{aiResult.correction}</p>
+              {hasCorrectionSuggestion && (
+                <div className="mt-3 rounded-lg bg-sky-50 px-3 py-2.5">
+                  <p className="mb-0.5 text-xs text-sky-500">교정 문장</p>
+                  <p className="text-sm font-medium text-sky-800">{aiResult.correctedContent}</p>
+                </div>
+              )}
               {hasCorrectionSuggestion && (
                 <button
                   onClick={handleAcceptCorrection}

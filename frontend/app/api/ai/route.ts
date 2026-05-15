@@ -29,7 +29,8 @@ export async function POST(request: Request) {
 {
   "translation": "한국어 번역",
   "analysis": "단어/문법 분석 (2-3문장, 한국어로)",
-  "correction": "교정 제안 또는 이미 올바르면 '올바른 표현입니다'",
+  "correction": "교정 이유 설명 (한국어로). 교정이 필요 없으면 '올바른 표현입니다'",
+  "correctedContent": "교정된 일본어 표현 (교정 불필요 시 빈 문자열 \"\")",
   "suggestedTags": ["태그1", "태그2", "태그3"]
 }
 
