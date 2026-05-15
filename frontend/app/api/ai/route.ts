@@ -33,7 +33,7 @@ export async function POST(request: Request) {
   "suggestedTags": ["태그1", "태그2", "태그3"]
 }
 
-suggestedTags는 이 표현의 특성을 나타내는 태그 3~5개. 예시: 명사, 동사, 형용사, 인사, 일상회화, 경어, 겸양어, N5, N4, N3 등`;
+suggestedTags는 이 표현의 특성을 나타내는 한국어 태그 3~5개. 반드시 한국어로만 작성. 예시: 명사, 동사, 형용사, 인사, 일상회화, 경어, 겸양어, N5, N4, N3 등`;
 
   const res = await fetch(
     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
