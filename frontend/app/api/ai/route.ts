@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server';
 
+const MOCK_RESPONSE = {
+  translation: '감사했습니다 (mock)',
+  analysis: '[Mock] 과거형 정중체 표현입니다. ありがとう(감사하다)의 정중 과거형으로 N5 수준의 기본 표현입니다.',
+  correction: '올바른 표현입니다',
+  suggestedTags: ['인사', '일상회화', 'N5', '정중체'],
+};
+
 export async function POST(request: Request) {
   const { content, type } = await request.json();
+
+  if (process.env.NODE_ENV !== 'production') {
+    await new Promise(r => setTimeout(r, 500));
+    return NextResponse.json({ ...MOCK_RESPONSE, translation: `${content} (mock)` });
+  }
 
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
