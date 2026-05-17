@@ -205,11 +205,17 @@ export default function ListPage() {
           ))}
         </div>
 
-        {/* 저장 버튼 */}
-        <div className="border-t border-gray-200 bg-white px-4 py-4">
+        {/* 하단 버튼 */}
+        <div className="border-t border-gray-200 bg-white px-4 py-4 flex gap-3">
+          <button
+            onClick={() => router.push('/quiz')}
+            className="flex-1 rounded-xl bg-indigo-500 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-600 active:scale-[0.98]"
+          >
+            퀴즈 시작
+          </button>
           <button
             onClick={() => router.push('/save')}
-            className="w-full rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98]"
+            className="flex-1 rounded-xl bg-sky-400 py-4 text-sm font-bold text-white shadow-sm transition hover:bg-sky-500 active:scale-[0.98]"
           >
             새 문장 저장
           </button>
