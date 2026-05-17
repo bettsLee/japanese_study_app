@@ -47,10 +47,11 @@ public class Entry {
         this.userId = userId;
     }
 
-    // 정답률 90% 미만이거나 강제 포함이면 퀴즈 대상
+    // 노출 횟수 10회 미만 OR 정답률 90% 미만이면 퀴즈 대상
     public boolean isInQuizPool() {
         if (forceIncludeInQuiz) return true;
         if (quizCount == 0) return true;
+        if (quizCount < 10) return true;
         return (double) correctCount / quizCount < 0.9;
     }
 
@@ -58,6 +59,12 @@ public class Entry {
         this.quizCount = 0;
         this.correctCount = 0;
         this.forceIncludeInQuiz = true;
+    }
+
+    public void recordAnswer(boolean correct) {
+        this.quizCount++;
+        if (correct) this.correctCount++;
+        this.forceIncludeInQuiz = false;
     }
 
     public void updateContent(String content) {
