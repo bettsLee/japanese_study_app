@@ -24,6 +24,7 @@ export default function QuizPage() {
   const [userAnswer, setUserAnswer] = useState('');
   const [error, setError] = useState('');
   const [answerError, setAnswerError] = useState('');
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const pendingOps = useRef<Promise<QuizResult>[]>([]);
   const isMounted = useRef(true);
@@ -113,14 +114,19 @@ export default function QuizPage() {
     return { question, koreanMeaning, userAnswer: answer, isCorrect, explanation, correctAnswer };
   };
 
-  const handleNext = async () => {
+  const handleNext = () => {
     const answer = userAnswer.trim();
     if (!answer) {
       setAnswerError('답변을 입력해주세요.');
       return;
     }
     setAnswerError('');
+    setShowConfirm(true);
+  };
 
+  const handleConfirm = async () => {
+    setShowConfirm(false);
+    const answer = userAnswer.trim();
     const question = questions[currentIndex];
     const koreanMeaning = translations[question.id] ?? question.content;
     const isLast = currentIndex === questions.length - 1;
@@ -142,7 +148,8 @@ export default function QuizPage() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') handleNext();
+    // IME 조합 중 Enter는 무시 (일본어 입력기 확정 시 오작동 방지)
+    if (e.key === 'Enter' && !e.nativeEvent.isComposing) handleNext();
   };
 
   // 로딩 상태
@@ -232,6 +239,28 @@ export default function QuizPage() {
 
   return (
     <main className="flex min-h-screen flex-col bg-gray-50">
+      {/* 제출 확인 팝업 */}
+      {showConfirm && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="mx-4 w-full max-w-xs rounded-2xl bg-white p-6 shadow-xl">
+            <p className="text-center text-base font-semibold text-gray-900">정답을 제출하시겠습니까?</p>
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 rounded-xl border border-gray-200 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50"
+              >
+                취소
+              </button>
+              <button
+                onClick={handleConfirm}
+                className="flex-1 rounded-xl bg-indigo-500 py-3 text-sm font-bold text-white hover:bg-indigo-600"
+              >
+                확인
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* 헤더 */}
       <header className="flex items-center border-b border-gray-200 bg-white px-4 py-4">
         <button
