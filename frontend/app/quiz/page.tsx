@@ -282,6 +282,7 @@ export default function QuizPage() {
         {/* 입력 */}
         <div className="flex flex-col gap-2">
           <input
+            key={currentIndex}
             ref={inputRef}
             type="text"
             value={userAnswer}
