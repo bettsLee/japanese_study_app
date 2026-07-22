@@ -30,6 +30,7 @@ export default function DeployTestPage() {
           <span className="text-3xl">こ</span>
           <h1 className="text-xl font-bold text-gray-800 mt-1">Kotoba 배포 확인</h1>
           <p className="text-xs text-gray-400 mt-0.5">이 페이지는 테스트용이며 추후 삭제됩니다</p>
+          <p className="text-xs text-gray-300 mt-0.5">파이프라인 테스트 · 2026-07-22</p>
         </div>
 
         <div className="rounded-xl border border-green-200 bg-green-50 p-4 space-y-2">
