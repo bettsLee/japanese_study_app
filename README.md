@@ -53,26 +53,6 @@
 
 ---
 
-## 📁 フォルダ構成
-
-```
-japanese_study_app/
-├── frontend/          # Next.jsプロジェクト
-│   ├── app/
-│   │   ├── login/     # ログインページ
-│   │   └── auth/      # OAuthコールバック
-│   └── lib/
-│       └── supabase/  # Supabaseクライアント
-└── backend/           # Spring Bootプロジェクト
-    ├── src/
-    │   └── main/java/com/jp5/backend/
-    │       ├── controller/  # REST API
-    │       └── config/      # Security設定
-    └── Dockerfile
-```
-
----
-
 ## ⚙️ ローカル開発環境セットアップ
 
 ### Frontend
