@@ -1,6 +1,6 @@
-# 🗾 Japanese Study App
+# 🗾 日本語学習アプリ
 
-> 일본 현지 생활 중 접한 문장을 저장하고, 단어·한자·문법을 퀴즈로 반복 학습하는 앱
+> 日本現地生活中に出会った文章を保存し、単語・漢字・文法をクイズで繰り返し学習するアプリ
 
 [![Frontend](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://japanese-study-app-front-dev.vercel.app/login)
 [![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://japanese-study-app.onrender.com/health)
@@ -9,78 +9,78 @@
 
 ---
 
-## 📱 서비스 소개
+## 📱 サービス紹介
 
-일본 현지에서 접한 문장을 빠르게 저장하고, 저장된 문장에서 단어·한자·문법을 태깅해 매일 퀴즈로 반복 학습하는 일본어 학습 앱입니다.
+日本現地で出会った文章を素早く保存し、保存した文章から単語・漢字・文法をタグ付けして毎日クイズで繰り返し学習する日本語学習アプリです。
 
 ---
 
-## 🏗️ 아키텍처
+## 🏗️ アーキテクチャ
 
 ```
-[사용자]
+[ユーザー]
    │
-   ├── 프론트엔드 (Next.js 15)
-   │       └── Vercel 배포
+   ├── フロントエンド (Next.js 15)
+   │       └── Vercelデプロイ
    │               └── Supabase Auth (Google OAuth)
    │
-   └── 백엔드 (Spring Boot 3.5)
-           └── Render 배포
+   └── バックエンド (Spring Boot 3.5)
+           └── Renderデプロイ
                    └── Supabase PostgreSQL
 ```
 
 ---
 
-## 🛠️ 기술 스택
+## 🛠️ 技術スタック
 
-| 구분 | 기술 |
+| 区分 | 技術 |
 |---|---|
 | Frontend | Next.js 15, TypeScript, Tailwind CSS |
 | Backend | Spring Boot 3.5, Java 17, Gradle |
 | Database | Supabase PostgreSQL |
 | Auth | Supabase Auth (Google OAuth) |
-| Hosting | Vercel (프론트) + Render (백엔드) |
-| 협업 도구 | Jira, Notion, GitHub |
+| Hosting | Vercel (フロント) + Render (バックエンド) |
+| 協業ツール | Jira, Notion, GitHub |
 
 ---
 
-## 🚀 배포 URL
+## 🚀 デプロイURL
 
-| 환경 | URL |
+| 環境 | URL |
 |---|---|
-| 프론트엔드 | https://japanese-study-app-front-dev.vercel.app/login |
-| 백엔드 헬스체크 | https://japanese-study-app.onrender.com/health |
+| フロントエンド | https://japanese-study-app-front-dev.vercel.app/login |
+| バックエンドヘルスチェック | https://japanese-study-app.onrender.com/health |
 
 ---
 
-## 📁 폴더 구조
+## 📁 フォルダ構成
 
 ```
 japanese_study_app/
-├── frontend/          # Next.js 프로젝트
+├── frontend/          # Next.jsプロジェクト
 │   ├── app/
-│   │   ├── login/     # 로그인 페이지
-│   │   └── auth/      # OAuth 콜백
+│   │   ├── login/     # ログインページ
+│   │   └── auth/      # OAuthコールバック
 │   └── lib/
-│       └── supabase/  # Supabase 클라이언트
-└── backend/           # Spring Boot 프로젝트
+│       └── supabase/  # Supabaseクライアント
+└── backend/           # Spring Bootプロジェクト
     ├── src/
     │   └── main/java/com/jp5/backend/
     │       ├── controller/  # REST API
-    │       └── config/      # Security 설정
+    │       └── config/      # Security設定
     └── Dockerfile
 ```
 
 ---
 
-## ⚙️ 로컬 개발 환경 설정
+## ⚙️ ローカル開発環境セットアップ
 
 ### Frontend
 
 ```bash
 cd frontend
 cp .env.example .env.local
-# .env.local에 Supabase 키 입력
+# .env.localにSupabaseキーを入力
 npm install
 npm run dev
 ```
@@ -95,7 +95,7 @@ export DATABASE_PASSWORD=...
 ./gradlew bootRun
 ```
 
-### 환경변수
+### 環境変数
 
 **frontend/.env.local**
 ```
@@ -113,32 +113,102 @@ DATABASE_PASSWORD=
 
 ---
 
-## 📋 브랜치 전략
+## 📋 ブランチ戦略
 
 ```
-main        ← 배포용 (직접 커밋 금지)
-develop     ← 개발 통합
-feature/JP-이슈번호-작업명  ← 기능 개발
+main        ← デプロイ用（直接コミット禁止）
+develop     ← 開発統合
+feature/JP-課題番号-作業名  ← 機能開発
 ```
 
 ---
 
-## 📌 스프린트 현황
+## 📌 スプリント状況
 
-| 이슈 | 작업 | 상태 |
+| 課題 | 作業 | 状態 |
 |---|---|---|
-| JP-5 | 프로젝트 초기 세팅 | ✅ 완료 |
-| JP-6 | 로그인 화면 UI | ✅ 완료 |
-| JP-8 | 문장 저장 기능 | 🔜 예정 |
-| JP-9 | 단어/한자/문법 태깅 | 🔜 예정 |
-| JP-10 | 퀴즈 기능 | 🔜 예정 |
+| JP-5 | プロジェクト初期セットアップ | ✅ 完了 |
+| JP-6 | ログイン画面UI | ✅ 完了 |
+| JP-8 | 文章保存機能 | 🔜 予定 |
+| JP-9 | 単語/漢字/文法タグ付け | 🔜 予定 |
+| JP-10 | クイズ機能 | 🔜 予定 |
 
 ---
 
-## 👥 팀
+## 🗺️ ロードマップ
 
-| 역할 | 담당 |
+| 状態 | 機能 | 判断根拠 |
+|---|---|---|
+| ✅ 完了 | ログイン/認証 | - |
+| 📝 企画完了 | LLM自動タグ付けパイプライン | Impact最大、Effort中 → 最優先着手 |
+| 🔜 予定 | 文章保存機能 | タグ付け機能と同時実装 |
+| ⏸️ 保留 | チャットボットQ&A (RAG) | Impact対比Effortが大きく後回しと判断 |
+| ⏸️ 保留 | 音声認識(STT) | コア学習ループ完成後に着手予定 |
+
+## 💡 次期開発: LLM自動タグ付けパイプライン（企画中）
+- 目標: 保存した文章から単語・漢字・文法要素をLLMで自動抽出・タグ付け
+- 設計方針: Redisキャッシングで重複リクエストのコストを削減、Circuit Breaker(Resilience4j)でAPI障害に対応
+- 成功指標（測定予定）: タグ付け精度 / キャッシュヒット率 / 平均応答速度 / 月間APIコスト
+
+---
+
+## 🎯 プロダクト企画・意思決定
+
+### 背景・課題意識
+
+これまでの実務経験は、キャッシュ設計・分散ロック・アーキテクチャパターン・イベント駆動・サーバーレスなど、
+伝統的なバックエンド領域に集中していた。一方で、AI/LLMを実際のプロダクト機能として設計・実装した経験が
+なく、「AI活用」はAIコーディングツール(Claude Code)を用いた開発支援の範囲にとどまっていた。
+
+また、これまでの案件は会社側にすでに存在する事業課題(外注費用、顧客離脱など)を起点に企画を主導した
+ものであり、事業背景やリソースなしに個人が最初から課題を定義し、プロダクトを設計する経験は持っていな
+かった。本プロジェクトは、この2点を補うために個人開発として立ち上げた。
+
+### プロダクト概要
+
+日本での実生活の中で出会った日本語の文章を保存し、単語・漢字・文法をタグ付けして反復学習できる学習
+アプリ。自身の日本語学習ニーズを起点に企画・設計・実装まで単独で担当している。
+
+- **ターゲットユーザー**: 日本在住で、教材の例文ではなく実生活で出会った表現を学習したい日本語学習者(自身を含む)
+- **成功基準**: 保存した文章から学習に必要なタグ付けが自動化され、日々の反復学習(クイズ)につながる状態を作ること
+
+### 企画プロセス
+
+開発着手前に、以下を明文化した上でスコープを決定した。
+
+- 課題定義・ターゲットユーザー・成功基準を整理したミニPRDを作成
+- 検討した機能候補(自動タグ付け、類似文章レコメンド、チャットボットQ&A、音声認識など)をImpact/Effortの2軸で評価
+- Impact最大・Effort中程度となった「LLM自動タグ付けパイプライン」を最優先機能として選定
+- 実装を見送った機能(チャットボットQ&A、音声認識など)についても、見送った理由を含めて記録・公開
+
+### 主要な意思決定
+
+**AS-IS**
+- LLM/生成AIを実プロダクト機能として組み込んだ経験がない
+- 事業背景なしに個人でゼロから課題定義・機能設計を行った経験がない
+
+**判断理由**
+- AI関連サービスの統合力が採用市場で求められる中核スキルとなっており、LLM API連携・コスト最適化・
+  障害対応といったAIバックエンドエンジニアリング力を実践的に養う必要があると判断
+- 複数のAI機能候補をImpact/Effort観点で比較・判断するプロセス自体を通じて、実装力だけでなくプロダクト
+  の優先順位を決定する力も併せて養うことを意図
+- 既存の強み(Redisキャッシュ、障害対応アーキテクチャ)をAI API連携という新領域に適用することで、既存の
+  エンジニアリング原則がAIシステムにも同様に通用するかを検証・拡張することを意図
+- コード実装に先立って意思決定文書(ロードマップ、優先順位マトリクス)を残す習慣を自らに課すことで、
+  企画力と実装力を同時に鍛えることを意図
+
+**TO-BE**
+- LLM API連携による自動タグ付けパイプラインの構築
+- Redisキャッシュ・Circuit Breakerによるコスト最適化と障害耐性の確保
+- pgvectorを用いたRAGベースの類似文章レコメンド
+- golden datasetに基づく評価(Eval)プロセスの設計・実行
+
+---
+
+## 👥 チーム
+
+| 役割 | 担当 |
 |---|---|
-| PM / QA | 이상권 |
-| Full Stack 개발 | Claude Code AI |
-| 디자인 | Visily AI |
+| PM / QA | イ・サンクォン |
+| フルスタック開発 | Claude Code AI |
+| デザイン | Visily AI |
