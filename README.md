@@ -1,6 +1,6 @@
-# 🗾 Japanese Study App
+# 🗾 日本語学習アプリ
 
-> 일본 현지 생활 중 접한 문장을 저장하고, 단어·한자·문법을 퀴즈로 반복 학습하는 앱
+> 日本現地生活中に出会った文章を保存し、単語・漢字・文法をクイズで繰り返し学習するアプリ
 
 [![Frontend](https://img.shields.io/badge/Frontend-Vercel-black?logo=vercel)](https://japanese-study-app-front-dev.vercel.app/login)
 [![Backend](https://img.shields.io/badge/Backend-Render-46E3B7?logo=render)](https://japanese-study-app.onrender.com/health)
@@ -9,78 +9,78 @@
 
 ---
 
-## 📱 서비스 소개
+## 📱 サービス紹介
 
-일본 현지에서 접한 문장을 빠르게 저장하고, 저장된 문장에서 단어·한자·문법을 태깅해 매일 퀴즈로 반복 학습하는 일본어 학습 앱입니다.
+日本現地で出会った文章を素早く保存し、保存した文章から単語・漢字・文法をタグ付けして毎日クイズで繰り返し学習する日本語学習アプリです。
 
 ---
 
-## 🏗️ 아키텍처
+## 🏗️ アーキテクチャ
 
 ```
-[사용자]
+[ユーザー]
    │
-   ├── 프론트엔드 (Next.js 15)
-   │       └── Vercel 배포
+   ├── フロントエンド (Next.js 15)
+   │       └── Vercelデプロイ
    │               └── Supabase Auth (Google OAuth)
    │
-   └── 백엔드 (Spring Boot 3.5)
-           └── Render 배포
+   └── バックエンド (Spring Boot 3.5)
+           └── Renderデプロイ
                    └── Supabase PostgreSQL
 ```
 
 ---
 
-## 🛠️ 기술 스택
+## 🛠️ 技術スタック
 
-| 구분 | 기술 |
+| 区分 | 技術 |
 |---|---|
 | Frontend | Next.js 15, TypeScript, Tailwind CSS |
 | Backend | Spring Boot 3.5, Java 17, Gradle |
 | Database | Supabase PostgreSQL |
 | Auth | Supabase Auth (Google OAuth) |
-| Hosting | Vercel (프론트) + Render (백엔드) |
-| 협업 도구 | Jira, Notion, GitHub |
+| Hosting | Vercel (フロント) + Render (バックエンド) |
+| 協業ツール | Jira, Notion, GitHub |
 
 ---
 
-## 🚀 배포 URL
+## 🚀 デプロイURL
 
-| 환경 | URL |
+| 環境 | URL |
 |---|---|
-| 프론트엔드 | https://japanese-study-app-front-dev.vercel.app/login |
-| 백엔드 헬스체크 | https://japanese-study-app.onrender.com/health |
+| フロントエンド | https://japanese-study-app-front-dev.vercel.app/login |
+| バックエンドヘルスチェック | https://japanese-study-app.onrender.com/health |
 
 ---
 
-## 📁 폴더 구조
+## 📁 フォルダ構成
 
 ```
 japanese_study_app/
-├── frontend/          # Next.js 프로젝트
+├── frontend/          # Next.jsプロジェクト
 │   ├── app/
-│   │   ├── login/     # 로그인 페이지
-│   │   └── auth/      # OAuth 콜백
+│   │   ├── login/     # ログインページ
+│   │   └── auth/      # OAuthコールバック
 │   └── lib/
-│       └── supabase/  # Supabase 클라이언트
-└── backend/           # Spring Boot 프로젝트
+│       └── supabase/  # Supabaseクライアント
+└── backend/           # Spring Bootプロジェクト
     ├── src/
     │   └── main/java/com/jp5/backend/
     │       ├── controller/  # REST API
-    │       └── config/      # Security 설정
+    │       └── config/      # Security設定
     └── Dockerfile
 ```
 
 ---
 
-## ⚙️ 로컬 개발 환경 설정
+## ⚙️ ローカル開発環境セットアップ
 
 ### Frontend
 
 ```bash
 cd frontend
 cp .env.example .env.local
-# .env.local에 Supabase 키 입력
+# .env.localにSupabaseキーを入力
 npm install
 npm run dev
 ```
@@ -95,7 +95,7 @@ export DATABASE_PASSWORD=...
 ./gradlew bootRun
 ```
 
-### 환경변수
+### 環境変数
 
 **frontend/.env.local**
 ```
@@ -113,32 +113,49 @@ DATABASE_PASSWORD=
 
 ---
 
-## 📋 브랜치 전략
+## 📋 ブランチ戦略
 
 ```
-main        ← 배포용 (직접 커밋 금지)
-develop     ← 개발 통합
-feature/JP-이슈번호-작업명  ← 기능 개발
+main        ← デプロイ用（直接コミット禁止）
+develop     ← 開発統合
+feature/JP-課題番号-作業名  ← 機能開発
 ```
 
 ---
 
-## 📌 스프린트 현황
+## 📌 スプリント状況
 
-| 이슈 | 작업 | 상태 |
+| 課題 | 作業 | 状態 |
 |---|---|---|
-| JP-5 | 프로젝트 초기 세팅 | ✅ 완료 |
-| JP-6 | 로그인 화면 UI | ✅ 완료 |
-| JP-8 | 문장 저장 기능 | 🔜 예정 |
-| JP-9 | 단어/한자/문법 태깅 | 🔜 예정 |
-| JP-10 | 퀴즈 기능 | 🔜 예정 |
+| JP-5 | プロジェクト初期セットアップ | ✅ 完了 |
+| JP-6 | ログイン画面UI | ✅ 完了 |
+| JP-8 | 文章保存機能 | 🔜 予定 |
+| JP-9 | 単語/漢字/文法タグ付け | 🔜 予定 |
+| JP-10 | クイズ機能 | 🔜 予定 |
 
 ---
 
-## 👥 팀
+## 🗺️ ロードマップ
 
-| 역할 | 담당 |
+| 状態 | 機能 | 判断根拠 |
+|---|---|---|
+| ✅ 完了 | ログイン/認証 | - |
+| 📝 企画完了 | LLM自動タグ付けパイプライン | Impact最大、Effort中 → 最優先着手 |
+| 🔜 予定 | 文章保存機能 | タグ付け機能と同時実装 |
+| ⏸️ 保留 | チャットボットQ&A (RAG) | Impact対比Effortが大きく後回しと判断 |
+| ⏸️ 保留 | 音声認識(STT) | コア学習ループ完成後に着手予定 |
+
+## 💡 次期開発: LLM自動タグ付けパイプライン（企画中）
+- 目標: 保存した文章から単語・漢字・文法要素をLLMで自動抽出・タグ付け
+- 設計方針: Redisキャッシングで重複リクエストのコストを削減、Circuit Breaker(Resilience4j)でAPI障害に対応
+- 成功指標（測定予定）: タグ付け精度 / キャッシュヒット率 / 平均応答速度 / 月間APIコスト
+
+---
+
+## 👥 チーム
+
+| 役割 | 担当 |
 |---|---|
-| PM / QA | 이상권 |
-| Full Stack 개발 | Claude Code AI |
-| 디자인 | Visily AI |
+| PM / QA | イ・サンクォン |
+| フルスタック開発 | Claude Code AI |
+| デザイン | Visily AI |
