@@ -28,55 +28,6 @@
 
 ---
 
-## 🚀 デプロイURL
-
-| 環境 | URL |
-|---|---|
-| フロントエンド | https://japanese-study-app-front-dev.vercel.app/login |
-| バックエンドヘルスチェック | https://japanese-study-app.onrender.com/health |
-
----
-
-## ⚙️ ローカル開発環境セットアップ
-
-### Frontend
-
-```bash
-cd frontend
-cp .env.example .env.local
-# .env.localにSupabaseキーを入力
-npm install
-npm run dev
-```
-
-### Backend
-
-```bash
-cd backend
-export DATABASE_URL=jdbc:postgresql://...
-export DATABASE_USERNAME=...
-export DATABASE_PASSWORD=...
-./gradlew bootRun
-```
-
-### 環境変数
-
-**frontend/.env.local**
-```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-NEXT_PUBLIC_API_URL=http://localhost:8080
-```
-
-**backend**
-```
-DATABASE_URL=
-DATABASE_USERNAME=
-DATABASE_PASSWORD=
-```
-
----
-
 ## 📋 ブランチ戦略
 
 ```
