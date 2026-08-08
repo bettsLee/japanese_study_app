@@ -15,22 +15,6 @@
 
 ---
 
-## 🏗️ アーキテクチャ
-
-```
-[ユーザー]
-   │
-   ├── フロントエンド (Next.js 15)
-   │       └── Vercelデプロイ
-   │               └── Supabase Auth (Google OAuth)
-   │
-   └── バックエンド (Spring Boot 3.5)
-           └── Renderデプロイ
-                   └── Supabase PostgreSQL
-```
-
----
-
 ## 🛠️ 技術スタック
 
 | 区分 | 技術 |
